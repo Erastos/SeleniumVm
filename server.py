@@ -25,9 +25,10 @@ class Server:
         conn, addr = self.client.accept()
         print(f"Accepted Connection from {addr}")
         while True:
-            conn.send(b"Connection Received\r\n")
             try:
-                command_length = int(conn.recv(4096).decode('utf-8').strip())
+                command_length = conn.recv(4096).decode('utf-8')
+                print(repr(command_length))
+                command_length = int(command_length.strip())
                 assert command_length > 0
                 conn.sendall(b"Ack\r\n")
                 output = conn.recv(command_length+2).strip()

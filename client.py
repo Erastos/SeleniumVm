@@ -44,7 +44,7 @@ class Client(cmd.Cmd):
     @staticmethod
     def create_command(verb, args):
         command_dict = {"verb": verb, "args": args}
-        json_string = json.dumps(command_dict)
+        json_string = json.dumps(command_dict) + '\r\n'
         return json_string
 
     def send_command(self, json_string):
