@@ -36,7 +36,7 @@ class Server:
             conn.send(b"Command Accepted\r\n")
 
     @staticmethod
-    def retrieve_message(self, conn):
+    def retrieve_message(conn):
         counter = 0
         message = ""
         while counter < 1:
