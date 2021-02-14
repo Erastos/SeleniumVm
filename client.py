@@ -49,11 +49,11 @@ class Client(cmd.Cmd):
 
     def send_command(self, json_string):
         for server in self.servers:
-            json_message_encoded = json_string.encode('utf-8')
-            server.sendall(f"{len(json_message_encoded)}\r\n".encode('utf-8'))
+            # length_message = f"{len(json_string)}\r\n"
+            # message = length_message + json_string + '\r\n'
+            message = json_string.encode('utf-8')
             # TODO: Check this for errors
-            ack = server.recv(4096)
-            server.sendall(json_message_encoded)
+            server.sendall(message)
 
     def postcmd(self, stop: bool, line: str):
         if not stop:

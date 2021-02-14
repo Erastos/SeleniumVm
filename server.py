@@ -25,14 +25,23 @@ class Server:
         print(f"Accepted Connection from {addr}")
         while True:
             try:
-                command_length = conn.recv(4096).decode('utf-8')
-                print(repr(command_length))
-                command_length = int(command_length.strip())
-                assert command_length > 0
-                conn.sendall(b"Ack\r\n")
-                output = conn.recv(command_length+2).decode('utf-8')
-                print(repr(output))
-                self.parse_command(output)
+                # command_length = conn.recv(4096).decode('utf-8')
+                # print(repr(command_length))
+                # command_length = int(command_length.strip())
+                # assert command_length > 0
+                # conn.sendall(b"Ack\r\n")
+                # output = conn.recv(command_length+2).decode('utf-8')
+                # print(repr(output))
+                counter = 0
+                message = ""
+                while counter < 1:
+                    partial_message = conn.recv(256)
+                    for c in partial_message:
+                        message += c
+                        if c == '\n':
+                            counter += 1
+                print(message)
+                # self.parse_command(output)
             except ConnectionResetError:
                 self.client.close()
                 break
