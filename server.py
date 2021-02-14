@@ -42,6 +42,8 @@ class Server:
         command_object = json.loads(output)
         if command_object['verb'] == 0 and self.browser is None:
             self.browser = Browser()
+        elif command_object['verb'] == 1 and self.browser is not None:
+            self.browser.go(command_object['args']['url'])
 
 
 if __name__ == '__main__':

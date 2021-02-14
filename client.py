@@ -4,7 +4,8 @@ import socket
 import json
 
 commands = {
-    "StartBrowser": 0
+    "StartBrowser": 0,
+    "Go": 1
 }
 
 
@@ -61,6 +62,13 @@ class Client(cmd.Cmd):
 
     def do_startBrowser(self, _):
         json_command = self.create_command(commands["StartBrowser"], None)
+        self.send_command(json_command)
+
+    def do_go(self, arg):
+        args = {
+            "url": arg
+        }
+        json_command = self.create_command(commands["Go"], args)
         self.send_command(json_command)
 
     def do_quit(self, _):
