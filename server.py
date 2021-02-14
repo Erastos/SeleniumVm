@@ -30,9 +30,9 @@ class Server:
                 command_length = int(command_length.strip())
                 assert command_length > 0
                 conn.sendall(b"Ack\r\n")
-                output = conn.recv(command_length+2).strip()
+                output = conn.recv(command_length+2).decode('utf-8')
+                print(repr(output))
                 self.parse_command(output)
-                print(output)
             except ConnectionResetError:
                 self.client.close()
                 break
