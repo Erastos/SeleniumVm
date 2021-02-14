@@ -35,7 +35,7 @@ class Server:
                 counter = 0
                 message = ""
                 while counter < 1:
-                    partial_message = conn.recv(256)
+                    partial_message = conn.recv(256).decode('utf-8')
                     for c in partial_message:
                         message += c
                         if c == '\n':
