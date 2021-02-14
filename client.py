@@ -2,7 +2,6 @@ import cmd
 import select
 import socket
 import json
-from enum import Enum
 
 commands = {
     "StartBrowser": 0
