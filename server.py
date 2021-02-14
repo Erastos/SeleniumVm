@@ -4,24 +4,23 @@ from socket import AF_INET, SOCK_STREAM
 import sys
 from browser import Browser
 
-HOST = "127.0.0.1"
-
 
 class Server:
-    def __init__(self, port):
+    def __init__(self, host, port):
         self.client = None
         self.port = port
         self.browser = None
+        self.host = host
         self.createClient()
 
     def createClient(self):
         self.client = socket.socket(AF_INET, SOCK_STREAM)
         self.client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.client.bind((HOST, self.port))
+        self.client.bind((self.host, self.port))
 
     def start(self):
         self.client.listen()
-        print(f"Server Started on {HOST}:{self.port}")
+        print(f"Server Started on {self.host}:{self.port}")
         conn, addr = self.client.accept()
         print(f"Accepted Connection from {addr}")
         while True:
@@ -46,5 +45,5 @@ class Server:
 
 
 if __name__ == '__main__':
-    server = Server(int(sys.argv[1]))
+    server = Server(sys.argv[1], int(sys.argv[2]))
     server.start()
