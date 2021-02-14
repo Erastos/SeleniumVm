@@ -25,20 +25,25 @@ class Server:
         print(f"Accepted Connection from {addr}")
         while True:
             try:
-                counter = 0
-                message = ""
-                while counter < 1:
-                    partial_message = conn.recv(256).decode('utf-8')
-                    for c in partial_message:
-                        message += c
-                        if c == '\n':
-                            counter += 1
+                message = self.retrieve_message(conn)
                 print(message)
                 self.parse_command(message)
             except ConnectionResetError:
                 self.client.close()
                 break
             conn.send(b"Command Accepted\r\n")
+
+    @staticmethod
+    def retrieve_message(self, conn):
+        counter = 0
+        message = ""
+        while counter < 1:
+            partial_message = conn.recv(256).decode('utf-8')
+            for c in partial_message:
+                message += c
+                if c == '\n':
+                    counter += 1
+        return message
 
     def parse_command(self, output):
         command_object = json.loads(output)
