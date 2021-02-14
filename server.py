@@ -1,6 +1,8 @@
 import socket
+import json
 from socket import AF_INET, SOCK_STREAM
 import sys
+from browser import Browser
 
 HOST = "127.0.0.1"
 
@@ -9,6 +11,7 @@ class Server:
     def __init__(self, port):
         self.client = None
         self.port = port
+        self.browser = None
         self.createClient()
 
     def createClient(self):
@@ -24,15 +27,21 @@ class Server:
         while True:
             conn.send(b"Connection Received\r\n")
             try:
-                command_length = conn.recv(4096)
+                command_length = int(conn.recv(4096).decode('utf-8').strip())
                 assert command_length > 0
                 conn.sendall(b"Ack\r\n")
-                output = conn.recv(command_length).decode('utf-8')
+                output = conn.recv(command_length+2).strip()
+                self.parse_command(output)
                 print(output)
             except ConnectionResetError:
                 self.client.close()
                 break
             conn.send(b"Command Accepted\r\n")
+
+    def parse_command(self, output):
+        command_object = json.loads(output)
+        if command_object['verb'] == 0 and self.browser is None:
+            self.browser = Browser()
 
 
 if __name__ == '__main__':

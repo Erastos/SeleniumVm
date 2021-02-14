@@ -4,9 +4,9 @@ import socket
 import json
 from enum import Enum
 
-
-class Commands(Enum):
-    START_BROWSER = 0
+commands = {
+    "StartBrowser": 0
+}
 
 
 class Client(cmd.Cmd):
@@ -60,8 +60,8 @@ class Client(cmd.Cmd):
             self.select_inputs()
         return stop
 
-    def do_startBrowser(self):
-        json_command = self.create_command(Commands.START_BROWSER, None)
+    def do_startBrowser(self, _):
+        json_command = self.create_command(commands["StartBrowser"], None)
         self.send_command(json_command)
 
     def do_quit(self, _):
