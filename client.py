@@ -2,10 +2,12 @@ import cmd
 import select
 import socket
 import json
+from server import Server
 
 commands = {
     "StartBrowser": 0,
-    "Go": 1
+    "Go": 1,
+    "Links": 2
 }
 
 
@@ -41,6 +43,10 @@ class Client(cmd.Cmd):
         for socket_server in read_fd_sets:
             print(socket_server.recv(4096).decode('utf-8'))
 
+    def receive_input(self):
+        for server in self.servers:
+            print(Server.retrieve_message(server))
+
     @staticmethod
     def create_command(verb, args):
         command_dict = {"verb": verb, "args": args}
@@ -69,6 +75,13 @@ class Client(cmd.Cmd):
             "url": arg
         }
         json_command = self.create_command(commands["Go"], args)
+        self.send_command(json_command)
+
+    def do_links(self, arg):
+        args = {
+            "text": arg
+        }
+        json_command = self.create_command(commands["Links"], args)
         self.send_command(json_command)
 
     def do_quit(self, _):

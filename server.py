@@ -29,7 +29,9 @@ class Server:
             try:
                 message = self.retrieve_message(conn)
                 print(message)
-                self.parse_command(message)
+                output = self.parse_command(message)
+                if output is not None:
+                    conn.sendall(output.encode('utf-8'))
             except ConnectionResetError:
                 self.client.close()
                 break
@@ -49,10 +51,18 @@ class Server:
 
     def parse_command(self, output):
         command_object = json.loads(output)
+        output = None
         if command_object['verb'] == 0 and self.browser is None:
             self.browser = Browser()
         elif command_object['verb'] == 1 and self.browser is not None:
             self.browser.go(command_object['args']['url'])
+        elif command_object['verb'] == 2 and self.browser is not None:
+            output = self.browser.get_all_links(command_object['args']['text'])
+        if output is not None:
+            json_output = json.dumps(output)
+            return json_output
+        else:
+            return output
 
 
 if __name__ == '__main__':
