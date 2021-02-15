@@ -58,6 +58,7 @@ class Server:
             self.browser.go(command_object['args']['url'])
         elif command_object['verb'] == 2 and self.browser is not None:
             output = self.browser.get_all_links(command_object['args']['text'])
+
         if output is not None:
             json_output = json.dumps(output)
             return json_output
