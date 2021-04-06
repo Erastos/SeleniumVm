@@ -5,6 +5,7 @@ import json
 from socket import AF_INET, SOCK_STREAM
 import sys
 from browser import Browser
+from client import Client
 
 
 class Server:
@@ -31,6 +32,7 @@ class Server:
                 print(message)
                 output = self.parse_command(message)
                 if output is not None:
+                    output += "\r\n"
                     conn.sendall(output.encode('utf-8'))
             except ConnectionResetError:
                 self.client.close()

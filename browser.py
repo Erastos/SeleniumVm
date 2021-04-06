@@ -13,11 +13,19 @@ class Browser:
         return result
 
     def get_all_links(self, link_text):
-        result = self.driver.find_elements_by_partial_link_text(link_text)
-        return list(map(lambda x: x.text, result))
+        xPathExpression = f"//a[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'{link_text.lower()}')]"
+        result = self.driver.find_elements_by_xpath(xPathExpression)
+        text = map(lambda x: x.text, result)
+        urls = map(lambda x: x.get_attribute('href'), result)
+        link_info = {name:url for name, url in zip(text, urls)}
+        return link_info
+
+    def close(self):
+        return self.driver.close()
 
 
 if __name__ == '__main__':
     browser = Browser()
     browser.go("https://news.ycombinator.com")
-    print(browser.get_all_links("SolarWinds"))
+    print(browser.get_all_links("A new"))
+    browser.close()

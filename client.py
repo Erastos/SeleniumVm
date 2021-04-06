@@ -26,7 +26,8 @@ class Client(cmd.Cmd):
             port = int(input(f"Server {i}'s Port Number: "))
             server_addrs.append((ip, port))
 
-        self.servers = list(map(lambda _: socket.socket(socket.AF_INET, socket.SOCK_STREAM), server_addrs))
+        self.servers = list(map(lambda _: socket.socket(
+            socket.AF_INET, socket.SOCK_STREAM), server_addrs))
         for server, addr in zip(self.servers, server_addrs):
             server.connect(addr)
 
@@ -41,11 +42,20 @@ class Client(cmd.Cmd):
         fd_sets = select.select(read_inputs, write_inputs, exception_inputs)
         read_fd_sets = fd_sets[0]
         for socket_server in read_fd_sets:
-            print(socket_server.recv(4096).decode('utf-8'))
+            # print(socket_server.recv(4096).decode('utf-8'))
+            print(Server.retrieve_message(socket_server))
 
     def receive_input(self):
         for server in self.servers:
             print(Server.retrieve_message(server))
+
+    def makeListSelection(self, selectionList, label):
+        print(label)
+        print("="*16)
+        for index, item in enumerate(selectionList):
+            print(f"{index}: {item}")
+        choice = input("$ ")
+        return selectionList[choice]
 
     @staticmethod
     def create_command(verb, args):
